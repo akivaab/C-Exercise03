@@ -18,4 +18,6 @@ int main(void)
         }
         printf_s("\n");
     }
+
+    return 0;
 }
