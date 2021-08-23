@@ -25,11 +25,11 @@ int Transpose(size_t size, numeric_t(*matrix)[])
 
 int CheckSymmetry(int symmetryStatus, numeric_t *element1, numeric_t *element2)
 {
-    if (*element1 == *element2 && symmetryStatus != 0 && symmetryStatus != -1)
+    if (symmetryStatus != 0 && *element1 == *element2 && symmetryStatus != -1)
     {
         return 1;
     }
-    else if (*element1 == -(*element2) && symmetryStatus != 0 && symmetryStatus != 1)
+    else if (symmetryStatus != 0 && *element1 == -(*element2) && symmetryStatus != 1)
     {
         return -1;
     }

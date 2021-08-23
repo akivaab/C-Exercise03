@@ -1,73 +1,76 @@
 #include <malloc.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "OptimizedFibonacci.h"
 
-static ull_t *s_fibonacciDb = NULL;
-static size_t s_fibonacciDbSize = 0;
+static ull_t *s_fibonacciArray = NULL;
+static size_t s_fibonacciArraySize = 0;
 
 ull_t Fibonacci(size_t n)
 {
-    if (!s_fibonacciDb)
+    if (!s_fibonacciArray)
     {
         InitFibonacci();
     }
 
-    if (s_fibonacciDbSize <= n) /* s_fibonacciDbSize == n means it's up to n-1 */
+    if (s_fibonacciArraySize <= n)
     {
-        size_t oldSize = s_fibonacciDbSize;
+        size_t oldSize = s_fibonacciArraySize;
+        s_fibonacciArraySize = n + 1;
+        ull_t *newArray = (ull_t *)realloc(s_fibonacciArray, s_fibonacciArraySize * sizeof(ull_t));
 
-        s_fibonacciDbSize = n + 1;
-
-        ull_t *newDb = (ull_t *)realloc(s_fibonacciDb, s_fibonacciDbSize * sizeof(ull_t));
-
-        if (newDb)
+        if (newArray)
         {
-            s_fibonacciDb = newDb;
+            s_fibonacciArray = newArray;
         }
         else
         {
             return 0;
         }
 
-        /* Fill the cache from the last existing value to n (which is in index [n+1]): */
-        for (size_t index = oldSize; index < s_fibonacciDbSize; ++index)
+        for (size_t index = oldSize; index < s_fibonacciArraySize; ++index)
         {
-            s_fibonacciDb[index] = s_fibonacciDb[index - 1] + s_fibonacciDb[index - 2];
+            s_fibonacciArray[index] = s_fibonacciArray[index - 1] + s_fibonacciArray[index - 2];
 
             /* Check overflow: If number is wrapped around, set it to zero.
              * If Previous value is already zero, it means we've already wrapped
              * and all values from now on should be zero.
              */
-            if ((s_fibonacciDb[index] < s_fibonacciDb[index - 1])
-                || (s_fibonacciDb[index - 1] == 0))
+            if ((s_fibonacciArray[index] < s_fibonacciArray[index - 1])
+                || (s_fibonacciArray[index - 1] == 0))
             {
-                s_fibonacciDb[index] = 0;
+                s_fibonacciArray[index] = 0;
             }
         }
     }
 
-    return s_fibonacciDb[n];
+    if (s_fibonacciArray)
+    {
+        return s_fibonacciArray[n];
+    }
+    else
+    {
+        return 0;
+    }
+    
 }
 
 void InitFibonacci(void)
 {
-    if (!s_fibonacciDb)
+    if (!s_fibonacciArray)
     {
-        const size_t INITIAL_DB_SIZE = 2;
+        const size_t INITIAL_ARRAY_SIZE = 2;
+        s_fibonacciArray = malloc(INITIAL_ARRAY_SIZE * sizeof(ull_t));
 
-        s_fibonacciDb = malloc(INITIAL_DB_SIZE * sizeof(ull_t));
-
-        if (s_fibonacciDb)
+        if (s_fibonacciArray)
         {
-            s_fibonacciDbSize = INITIAL_DB_SIZE;
-            s_fibonacciDb[0] = 0;
-            s_fibonacciDb[1] = 1;
+            s_fibonacciArraySize = INITIAL_ARRAY_SIZE;
+            s_fibonacciArray[0] = 0;
+            s_fibonacciArray[1] = 1;
         }
         else
         {
-            printf("Fatal error: Out of memory. Please contact your administrator\n");
+            printf_s("Fatal error: Out of memory. Please contact your administrator\n");
             exit(1);
         }
     }
@@ -75,10 +78,10 @@ void InitFibonacci(void)
 
 void FinalizeFibonacci(void)
 {
-    if (s_fibonacciDb)
+    if (s_fibonacciArray)
     {
-        free(s_fibonacciDb);
-        s_fibonacciDbSize = 0;
-        s_fibonacciDb = NULL;
+        free(s_fibonacciArray);
+        s_fibonacciArraySize = 0;
+        s_fibonacciArray = NULL;
     }
 }
