@@ -7,9 +7,9 @@ void Swap(numeric_t *a, numeric_t *b)
     *b = temp;
 }
 
-enum SymmetryStatus Transpose(size_t size, numeric_t(*matrix)[])
+SymmetryStatus Transpose(size_t size, numeric_t(*matrix)[])
 {
-    enum SymmetryStatus status = undetermined;
+    SymmetryStatus status = undetermined;
     for (size_t i = 0; i < size; ++i)
     {
         for (size_t j = i + 1; j < size; ++j)
@@ -23,7 +23,7 @@ enum SymmetryStatus Transpose(size_t size, numeric_t(*matrix)[])
     return status;
 }
 
-enum SymmetryStatus CheckSymmetry(enum SymmetryStatus status, numeric_t *element1, numeric_t *element2)
+SymmetryStatus CheckSymmetry(SymmetryStatus status, numeric_t *element1, numeric_t *element2)
 {
     if (status != neither && *element1 == *element2 && status != skewSymmetric)
     {
