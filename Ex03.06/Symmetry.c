@@ -7,34 +7,34 @@ void Swap(numeric_t *a, numeric_t *b)
     *b = temp;
 }
 
-int Transpose(size_t size, numeric_t(*matrix)[])
+enum SymmetryStatus Transpose(size_t size, numeric_t(*matrix)[])
 {
-    int symmetryStatus = 2;     /* Not 1, 0, or -1 */
+    enum SymmetryStatus status = undetermined;
     for (size_t i = 0; i < size; ++i)
     {
         for (size_t j = i + 1; j < size; ++j)
         {
-            symmetryStatus = CheckSymmetry(symmetryStatus, ((numeric_t *)matrix) + i * size + j,
-                                                           ((numeric_t *)matrix) + j * size + i);
+            status = CheckSymmetry(status, ((numeric_t *)matrix) + i * size + j,
+                                           ((numeric_t *)matrix) + j * size + i);
             Swap(((numeric_t *)matrix) + i * size + j,
                  ((numeric_t *)matrix) + j * size + i);
         }
     }
-    return symmetryStatus;
+    return status;
 }
 
-int CheckSymmetry(int symmetryStatus, numeric_t *element1, numeric_t *element2)
+enum SymmetryStatus CheckSymmetry(enum SymmetryStatus status, numeric_t *element1, numeric_t *element2)
 {
-    if (symmetryStatus != 0 && *element1 == *element2 && symmetryStatus != -1)
+    if (status != neither && *element1 == *element2 && status != skewSymmetric)
     {
-        return 1;
+        return symmetric;
     }
-    else if (symmetryStatus != 0 && *element1 == -(*element2) && symmetryStatus != 1)
+    else if (status != neither && *element1 == -(*element2) && status != symmetric)
     {
-        return -1;
+        return skewSymmetric;
     }
     else
     {
-        return 0;
+        return neither;
     }
 }

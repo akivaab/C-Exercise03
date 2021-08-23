@@ -6,9 +6,9 @@
 int main(void)
 {
     int matrix[SIZE][SIZE] = { { 1, 1, 1, 1},
-                               { 1, 2, 7, 2},
+                               { 1, 2, 2, 2},
                                { 1, 2, 3, 3},
-                               { 5, 2, 3, 4} };
+                               { 1, 2, 3, 4} };
     int symmetryStatus = Transpose(SIZE, matrix);
 
     for (int i = 0; i < SIZE; ++i)

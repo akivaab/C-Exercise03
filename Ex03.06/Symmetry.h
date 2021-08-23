@@ -12,6 +12,17 @@
 typedef int numeric_t;
 
 /**
+ * @brief Values that reflect whether a matrix is symmetric or otherwise. 
+*/
+enum SymmetryStatus
+{
+    symmetric = 1,
+    skewSymmetric = -1,
+    neither = 0,
+    undetermined = 2
+};
+
+/**
  * @brief Swaps the values of two numbers.
  *
  * @param a the first number
@@ -25,19 +36,18 @@ void Swap(numeric_t *a, numeric_t *b);
  * @param size the size of the matrix
  * @param matrix the matrix being transposed
  * 
- * @return a value, 1 indicating symmetry, -1 skew-symmetry, 0 neither
+ * @return a value indicating the symmetric status of the matrix
 */
-int Transpose(size_t size, numeric_t(*matrix)[]);
+enum SymmetryStatus Transpose(size_t size, numeric_t(*matrix)[]);
 
 /**
  * @brief Checks if two elements of a matrix being transposed make it symmetrical, skew-symmetrical, or neither. 
  * 
- * @param symmetryStatus indicates what examining past elements has determined regarding the matrix's symmetry so far
+ * @param status indicates what examining past elements has determined regarding the matrix's symmetry so far
  * @param element1 points to the first element of the pair being transposed
  * @param element2 points to the second element of the pair being transposed
  * 
- * @return a value indicating the status of the matrix as determined so far: 1 = symmetry, -1 = skew-symmetry, 0 = neither
+ * @return a value indicating the status of the matrix as determined so far
 */
-int CheckSymmetry(int symmetryStatus, numeric_t *element1, numeric_t *element2);
-
+enum SymmetryStatus CheckSymmetry(enum SymmetryStatus status, numeric_t *element1, numeric_t *element2);
 #endif
